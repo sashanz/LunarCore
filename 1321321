@@ -1184,10 +1184,6 @@
                 connection = nil 
             end
 
-            if Library.Blur then 
-                Library.Blur:Destroy()
-            end 
-
             getgenv().Library = nil 
         end
     --
@@ -1698,8 +1694,6 @@
                 DisplayOrder = 100;
             }); 
 
-           
-
             Library.KeybindList = Library:StatusList({Name = "Keybinds"})
 
             local Items = Cfg.Items; do
@@ -1948,7 +1942,13 @@
                 Items.Watermark.Visible = bool
             end
 
-           
+            function Cfg.SetVisible(bool)
+                if Library.Tweening then
+                    return 
+                end     
+
+                Cfg.Tween(bool)
+            end 
 
             function Cfg.Tween(bool) 
                 if Library.Tweening then 
@@ -2129,13 +2129,6 @@
                         BorderSizePixel = 0;
                         BackgroundColor3 = rgb(0, 0, 0)
                     });
-
-                    -- task.spawn(function()
-                    --     while true do 
-                    --         Items.Window.Rotation += 1
-                    --         task.wait() 
-                    --     end 
-                    -- end)
 
                     Items.Glow = Library:Create( "ImageLabel", {
                         ImageColor3 = themes.preset.accent;
