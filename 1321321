@@ -1948,15 +1948,7 @@
                 Items.Watermark.Visible = bool
             end
 
-            function Cfg.SetVisible(bool)
-                if Library.Tweening then
-                    return 
-                end     
-
-                Library:Tween(Library.Blur, {Size = bool and (Flags["BlurSize"] or 15) or 0})
-
-                Cfg.Tween(bool)
-            end 
+           
 
             function Cfg.Tween(bool) 
                 if Library.Tweening then 
