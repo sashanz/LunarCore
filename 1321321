@@ -1184,6 +1184,10 @@
                 connection = nil 
             end
 
+            if Library.Blur then 
+                Library.Blur:Destroy()
+            end 
+
             getgenv().Library = nil 
         end
     --
@@ -1694,6 +1698,12 @@
                 DisplayOrder = 100;
             }); 
 
+            Library.Blur = Library:Create( "BlurEffect" , {
+                Parent = Lighting;
+                Enabled = true;
+                Size = 0
+            });
+
             Library.KeybindList = Library:StatusList({Name = "Keybinds"})
 
             local Items = Cfg.Items; do
@@ -1784,6 +1794,13 @@
                         BorderSizePixel = 0;
                         BackgroundColor3 = rgb(0, 0, 0)
                     });
+local holder = library:panel({
+					name = "ESP Preview", 
+					anchor_point = vec2(0, 0),
+					size = dim2(0, 300, 0, 325),
+					position = dim2(0, style.items.main_holder.AbsolutePosition.X, 0, style.items.main_holder.AbsolutePosition.Y + style.items.main_holder.AbsoluteSize.Y + 2),
+					image = "rbxassetid://77684377836328",
+				}) 
 
                     local Stroke = Library:Create( "UIStroke" , {
                         Color = rgb(15, 15, 20);
@@ -1791,13 +1808,6 @@
                         Parent = Items.InnerOutline;
                         Thickness = 10000
                     }); Library:Themify(Stroke, "outline", "Color");
-local holder = library:panel({
-					name = "ESP Preview", 
-					anchor_point = vec2(0, 0),
-					size = dim2(0, 300, 0, 325),
-					position = dim2(0, style.items.main_holder.AbsolutePosition.X, 0, style.items.main_holder.AbsolutePosition.Y + style.items.main_holder.AbsoluteSize.Y + 2),
-					image = "rbxassetid://77684377836328",
-				})
 
                     Items.Title = Library:Create( "TextLabel" , {
                         FontFace = Fonts[themes.preset.font];
@@ -1953,6 +1963,8 @@ local holder = library:panel({
                 if Library.Tweening then
                     return 
                 end     
+
+                Library:Tween(Library.Blur, {Size = bool and (Flags["BlurSize"] or 15) or 0})
 
                 Cfg.Tween(bool)
             end 
@@ -2136,6 +2148,13 @@ local holder = library:panel({
                         BorderSizePixel = 0;
                         BackgroundColor3 = rgb(0, 0, 0)
                     });
+
+                    -- task.spawn(function()
+                    --     while true do 
+                    --         Items.Window.Rotation += 1
+                    --         task.wait() 
+                    --     end 
+                    -- end)
 
                     Items.Glow = Library:Create( "ImageLabel", {
                         ImageColor3 = themes.preset.accent;
@@ -4942,6 +4961,11 @@ local holder = library:panel({
                     end 
 
                     themes.preset.textsize = int
+                end})
+                Section:Slider({Name = "Blur Intensity", Default = 14, Decimal = 1, Min = 1, Max = 100, Flag = "BlurSize", Callback = function(int)
+                    if Window.Items.Holder.Visible then 
+                        Library.Blur.Size = int
+                    end 
                 end})
                 Section:Button({Name = "Test", Callback = function()
                     local Notification = Library:Notification({Name = "Hello there!", Lifetime = 5})
